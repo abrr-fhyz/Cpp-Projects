@@ -128,6 +128,21 @@ void print(struct block* pointer)
     printf("\n");
 }
 
+struct block* replaceX(int data1, int position, struct block *head)
+{
+    struct block* now=head;
+    while((now->data)!=position)
+    {
+        if(now->link== NULL)
+        {
+            printf("Element not found\n");
+            exit(0);
+        }
+        now=now->link; //moving to the next element by jumping on the link
+    }
+    //printf("at the point %d, %d\n", now->data, temp->data);
+    now->data=data1; //replacing data
+}
 
 int main()
 {
@@ -160,6 +175,9 @@ int main()
     scanf("%d", &x);
     erase(x, &head); //erasing the element x from the list
 
+    printf("replace a specific element\n");
+    scanf("%d %d", &point, &x);
+    replaceX(x, point, head);
     print(head);
 
     return 0;
