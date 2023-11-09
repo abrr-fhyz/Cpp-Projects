@@ -8,3 +8,5 @@ function insertF, inserts elements at the beginning of the list by changing the 
 function insertX, inserts an element 'x' at a selected 'point' of the linked list.
 
 function erase, erases a selected element 'x' from the linked list.
+
+function replaceX, replaces the element 'point' with another element 'x'
