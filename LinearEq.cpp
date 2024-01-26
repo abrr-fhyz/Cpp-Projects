@@ -2,9 +2,9 @@
 #include<string>
 using namespace std;
 
-double array[15][16]; //setting the cap at 15 variable linear equations
-double solution[15]; //saves the solutions
-double store[15][16]; //storing the equations for calculating the other solutions
+double array[100][101]; //setting the cap at 15 variable linear equations
+double solution[100]; //saves the solutions
+double store[100][101]; //storing the equations for calculating the other solutions
 int cnt=0;
 
 void soln() //finds out the other n-2 solutions
