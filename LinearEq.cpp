@@ -2,7 +2,7 @@
 #include<string>
 using namespace std;
 
-double array[100][101]; //setting the cap at 15 variable linear equations
+double array[100][101]; //setting the cap at 100 variable linear equations
 double solution[100]; //saves the solutions
 double store[100][101]; //storing the equations for calculating the other solutions
 int cnt=0;
