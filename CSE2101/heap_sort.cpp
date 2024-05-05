@@ -16,8 +16,8 @@ void heapify(int arr[], int upperBound, int lowerBound){
 
 	//set lowerBound as the root node
 	int largestIdx = lowerBound;
-	int leftIdx = 2*lowerBound;
-	int rightIdx = 2*lowerBound + 1;
+	int leftIdx = 2*lowerBound + 1;
+	int rightIdx = 2*lowerBound + 2;
 
 	if(leftIdx < upperBound && arr[leftIdx] > arr[largestIdx]){
 		largestIdx = leftIdx;
