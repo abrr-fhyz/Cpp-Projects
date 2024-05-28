@@ -127,34 +127,34 @@ struct AVLTree{
 		}
 	}
 	void traverse(node* node, int height, int level, int maxHeight) {
-    if (node == nullptr || getHeight(node) < height)
-        return;
-    if (getHeight(node) == height){
-    	int cnst = maxHeight - level;
-        int spaces = (1 << (cnst)) - 1; 
-        int val = 1;
-        while(cnst--)
-        	val *= 2;
-        for (int i = 0; i < spaces+val; i++)
-            cout << " ";
-        if (node->data > 9)
-            cout << node->data;
-        else
-            cout << node->data << " ";
-        for (int i = 0; i < spaces + val; i++)
-            cout << " ";
-        return;
-    }
-    traverse(node->left, height, level + 1, maxHeight);
-    traverse(node->right, height, level + 1, maxHeight);
-}
-void showTree() {
-    int maxHeight = getHeight(head);
-    for (int height = maxHeight; height > 0; height--){
-        traverse(head, height, 1, maxHeight);
-        cout << endl << endl; 
-    }
-}
+    	if(node == nullptr || getHeight(node) < height)
+        	return;
+    	if(getHeight(node) == height){
+    		int cnst = maxHeight - level;
+        	int spaces = (1 << (cnst)) - 1; 
+        	int val = 1;
+        	while(cnst--)
+        		val *= 2;
+        	for (int i = 0; i < spaces+val; i++)
+            	cout << " ";
+        	if (node->data > 9)
+            	cout << node->data;
+        	else
+            	cout << node->data << " ";
+        	for (int i = 0; i < spaces + val; i++)
+            	cout << " ";
+        	return;
+    	}
+    	traverse(node->left, height, level + 1, maxHeight);
+    	traverse(node->right, height, level + 1, maxHeight);
+	}
+	void showTree() {
+    	int maxHeight = getHeight(head);
+    	for (int height = maxHeight; height > 0; height--){
+        	traverse(head, height, 1, maxHeight);
+        	cout << endl << endl; 
+    	}
+	}
 };
 int main(){
 	AVLTree tree;
