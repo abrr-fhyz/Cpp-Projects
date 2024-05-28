@@ -1,167 +1,180 @@
-#include <iostream>
+#include<bits/stdc++.h>
 using namespace std;
+struct AVLTree{
+	struct node{
+		int data;
+		node* left;
+		node* right;
+		int height;
+	};
+	node* head = nullptr;
+	int getHeight(node* node){
+		if(node == nullptr)
+			return 0;
+		return node->height;
+	}
+	int newHeight(node* node){
+		return (max(getHeight(node->left), getHeight(node->right)) + 1);
+	}
+	node* getNewNode(int data){
+		node* newNode = new node;
+		newNode->left = nullptr;
+		newNode->right = nullptr;
+		newNode->data = data;
+		newNode->height = 1;
+		return newNode;
+	}
+	node* getMinNode(node* root){
+		node* temp = root;
+		while(temp->left != nullptr)
+			temp = temp->left;
+		return temp;
+	}
+	void RR(node* &x){
+		node* temp = x->left;
+		node* child = temp->right;
+		temp->right = x;
+		x->left = child;
+		x->height = newHeight(x);
+		temp->height = newHeight(temp);
+		x = temp;
+	}
+	void LL(node* &x){
+		node* temp = x->right;
+		node* child = temp->left;
+		temp->left = x;
+		x->right = child;
+		x->height = newHeight(x);
+		temp->height = newHeight(temp);
+		x = temp;
+	}
+	void LR(node* &x){
+		LL(x->left);
+		RR(x);
+	}
+	void RL(node* &x){
+		RR(x->right);
+		LL(x);
+	}
+	void organiseTree(node* &root, int key){
+		if(root == nullptr)
+			return;
+		root->height = newHeight(root);
+		int balance = getHeight(root->left) - getHeight(root->right);
+		if(balance > 1){
+			if(key < root->left->data){
+				RR(root);
+				return;
+			}
+			LR(root);
+			return;
+		}
+		if(balance < -1){
+			if(key > root->right->data){
+				LL(root);
+				return;
+			}
+			RL(root);
+			return;
+		}
+	}
+	void insert(node* &root, int key){
+		if(root == nullptr){
+			root = getNewNode(key);
+			return;
+		}
+		if(root->data > key)
+			insert(root->left, key);
+		else
+			insert(root->right, key);
 
-struct AVLTree {
-    struct node {
-        int val;
-        node* left;
-        node* right;
-        int height;
-    };
-
-    node* primaryRoot = nullptr;
-
-    int getHeight(node* x) {
-        if (x == nullptr)
-            return 0;
-        return x->height;
-    }
-
-    int getMax(int a, int b) {
-        return (a > b) ? a : b;
-    }
-
-    node* createNewNode(int key) {
-        node* newNode = new node;
-        newNode->val = key;
-        newNode->left = nullptr;
-        newNode->right = nullptr;
-        newNode->height = 1;
-        return newNode;
-    }
-
-    node * getMinNode(node* thisNode) 
-    { 
-        node* current = thisNode; 
-        while (current->left != NULL){
-            current = current->left; 
-        }
-        return current; 
-    }
-
-    void rotateRight(node* &x) {
-        node* temp = x->left;
-        node* temp2 = temp->right;
-
-        temp->right = x;
-        x->left = temp2;
-
-        x->height = getMax(getHeight(x->left), getHeight(x->right)) + 1;
-        temp->height = getMax(getHeight(temp->left), getHeight(temp->right)) + 1;
-
-        x = temp;
-    }
-
-    void rotateLeft(node* &x) {
-        node* temp = x->right;
-        node* temp2 = temp->left;
-
-        temp->left = x;
-        x->right = temp2;
-
-        x->height = getMax(getHeight(x->left), getHeight(x->right)) + 1;
-        temp->height = getMax(getHeight(temp->left), getHeight(temp->right)) + 1;
-
-        x = temp;
-    }
-
-    //reorganise tree
-    void organiseTree(node* &root, int key){
-        root->height = getMax(getHeight(root->left), getHeight(root->right)) + 1;
-        int balance = getHeight(root->left) - getHeight(root->right);
-
-        if (balance > 1 && key < root->left->val)
-            rotateRight(root);
-        else if (balance < -1 && key > root->right->val)
-            rotateLeft(root);
-        else if (balance > 1 && key > root->left->val) {
-            rotateLeft(root->left);
-            rotateRight(root);
-        }
-        else if (balance < -1 && key < root->right->val) {
-            rotateRight(root->right);
-            rotateLeft(root);
-        }
-    }
-
-
-    //inserter function
-    void insert(node* &root, int key) {
-        if (root == nullptr) {
-            root = createNewNode(key);
-            return;
-        }
-
-        if (key < root->val)
-            insert(root->left, key);
+		organiseTree(root, key);
+	}
+	void remove(node* &root, int key){
+		if(root == nullptr)
+			return;
+		if(root->data > key)
+			remove(root->left, key);
+		else if(root->data < key)
+			remove(root->right, key);
+		else{
+			if(root->left == nullptr || root->right == nullptr){
+				node* child;
+				if(root->left != nullptr)
+					child = root->left;
+				else
+					child = root->right;
+				if(child == nullptr){
+					child = root;
+					root = nullptr;
+				} else {
+					*root = *child;
+				}
+				delete child;
+			} else {
+				node* smol = getMinNode(root->right);
+				root->data = smol->data;
+				remove(root->right, smol->data); 
+			}
+		}
+		organiseTree(root, key);
+	}
+	void print(node* temp){
+		if(temp != nullptr){
+			print(temp->left);
+			cout << temp->data << " ";
+			print(temp->right);
+		}
+	}
+	void traverse(node* node, int height, int level, int maxHeight) {
+    if (node == nullptr || getHeight(node) < height)
+        return;
+    if (getHeight(node) == height){
+    	int cnst = maxHeight - level;
+        int spaces = (1 << (cnst)) - 1; 
+        int val = 1;
+        while(cnst--)
+        	val *= 2;
+        for (int i = 0; i < spaces+val; i++)
+            cout << " ";
+        if (node->data > 9)
+            cout << node->data;
         else
-            insert(root->right, key);
-
-        organiseTree(root, key);
+            cout << node->data << " ";
+        for (int i = 0; i < spaces + val; i++)
+            cout << " ";
+        return;
     }
-
-    //deletion function
-    void remove(node* &root, int key){
-        if(root == NULL)
-            return;
-
-        if(key > root->val)
-            remove(root->right, key);
-        if(key < root->val)
-            remove(root->left, key);
-
-        if(key == root->val){
-
-            if( (root->left == NULL) || (root->right == NULL) ) 
-            { 
-                node* temp = root->left ? root->left : root->right; 
-                if (temp == NULL) 
-                { 
-                    temp = root; 
-                    root = NULL; 
-                } 
-                else  
-                    *root = *temp; 
-
-                free(temp); 
-            } 
-            else
-            {  
-                node* temp = getMinNode(root->right); 
-                root->val = temp->val;  
-                remove(root->right, temp->val); 
-            } 
-        }
-
-        if(root == NULL)
-            return;
-
-        organiseTree(root, key);
+    traverse(node->left, height, level + 1, maxHeight);
+    traverse(node->right, height, level + 1, maxHeight);
+}
+void showTree() {
+    int maxHeight = getHeight(head);
+    for (int height = maxHeight; height > 0; height--){
+        traverse(head, height, 1, maxHeight);
+        cout << endl << endl; 
     }
+}
 
-
-    //print function
-    void print(node* root) {
-        if (root != nullptr) {
-            print(root->left);
-            cout << root->val << " ";
-            print(root->right);
-        }
-    }
 };
-
-int main() {
-    AVLTree tree;
-    tree.insert(tree.primaryRoot, 1);
-    tree.insert(tree.primaryRoot, 5);
-    tree.insert(tree.primaryRoot, 2);
-    tree.insert(tree.primaryRoot, 6);
-    tree.insert(tree.primaryRoot, 3);
-    tree.insert(tree.primaryRoot, 4);
-    tree.print(tree.primaryRoot);
-    cout << endl;
-    tree.remove(tree.primaryRoot, 2);
-    tree.print(tree.primaryRoot);
-
-    return 0;
+int main(){
+	AVLTree tree;
+    tree.insert(tree.head, 1);
+    tree.insert(tree.head, 5);
+    tree.insert(tree.head, 7);
+    tree.insert(tree.head, 2);
+    tree.insert(tree.head, 0);
+    tree.insert(tree.head, 6);
+    tree.insert(tree.head, 9);
+    tree.insert(tree.head, 11);
+    tree.insert(tree.head, 22);
+    tree.insert(tree.head, 12);
+    tree.insert(tree.head, 13);
+    tree.insert(tree.head, 14);
+    tree.insert(tree.head, 15);
+    tree.insert(tree.head, 45);
+    tree.insert(tree.head, 16);
+    tree.print(tree.head);
+    cout << endl << endl;
+    tree.showTree();
 }
