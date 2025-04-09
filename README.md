@@ -1,3 +1,6 @@
+# Others
+Includes data structures and algorithms implemented using C++
+
 # Linked-Lists.cpp
 the value of n is taken at first, denoting the number of elements to be inserted through the inputL and insertF functions.
 
@@ -16,4 +19,7 @@ function replaceX, replaces the element 'point' with another element 'x'
 Its is a simple program that can solve any Multi variable Linear Equation upto 100 variables, and display all answers.
 
 Format and working principle is mentioned within the code block.
+
+# Tower of Hanoi
+A simple tower of hanoi program, that includes visualization of the towers using ASCII characters, implemented entirely in C.
 
